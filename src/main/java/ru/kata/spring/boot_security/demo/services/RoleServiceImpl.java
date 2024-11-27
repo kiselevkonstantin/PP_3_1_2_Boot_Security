@@ -30,7 +30,6 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.save(role);
     }
 
-
     @Override
     public void delete(Long id) {
         roleRepository.delete(roleRepository.getById(id));

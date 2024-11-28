@@ -21,9 +21,12 @@
         <td th:text="${user.getId()}">ID</td>
         <td th:text="${user.getUsername()}">Name</td>
         <td th:text="${user.getEmail()}">e-mail</td>
+        <td th:each="role:${user.roles}" th:text="${role.role}"/>
+        <td>
     </tr>
     </tbody>
 </table>
+
 
 <br/>
 <hr/>

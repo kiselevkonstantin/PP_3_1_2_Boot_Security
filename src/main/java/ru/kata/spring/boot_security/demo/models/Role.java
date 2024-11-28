@@ -12,16 +12,16 @@ public class Role implements GrantedAuthority {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "name")
-    private String name;
+    private String role;
 
     public Role() {
     }
 
     public Role(String name) {
-        this.name = name;
+        this.role = name;
     }
 
     @ManyToMany
@@ -30,21 +30,21 @@ public class Role implements GrantedAuthority {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRole(String name) {
+        this.role = name;
     }
 
     @Override // interface GrantedAuthority
     public String getAuthority() {
-        return getName();
+        return getRole();
     }
 
     @Override
@@ -52,11 +52,11 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(name, role.name);
+        return Objects.equals(id, role.id) && Objects.equals(role, role.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, role);
     }
 }

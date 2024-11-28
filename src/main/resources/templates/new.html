@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
+<form th:method="POST" th:action="@{/admin/addUser}" th:object="${user}">
     <label for="name">Name:</label>
     <input type="text" th:field="*{username}" id="name"/>
     <br/>
@@ -16,6 +16,9 @@
     <label for="email">E-mail:</label>
     <input type="text" th:field="*{email}" id="email"/>
     <br/>
+    <select th:name="roles" th:value="*{roles}">
+        <option th:each="role:${roles}" th:value="${role.id}" th:text="${role.role}" selected/>
+    </select>
 
     <input type="submit" value="Create"/>
 </form>

@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/admin/update(id=${user.id})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin/save(id=${user.id})}" th:object="${user}">
     <label for="name">Name:</label>
     <input type="text" th:field="*{username}" id="name"/>
     <br/>

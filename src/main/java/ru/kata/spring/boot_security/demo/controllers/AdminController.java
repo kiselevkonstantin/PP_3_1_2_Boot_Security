@@ -39,7 +39,7 @@ public class AdminController {
 
 
     @GetMapping("/new")
-    public String newUser(Model model) {
+    public String addNewUser(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.getDemandedRoles());
         return "new";
@@ -52,7 +52,7 @@ public class AdminController {
     }
 
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteUser(@RequestParam("id") long id) {
         userService.delete(id);
         return "redirect:/admin";
@@ -62,12 +62,14 @@ public class AdminController {
     @GetMapping("/update")
     public String editUser(@RequestParam("id") long id, Model model) {
         model.addAttribute("user", userService.getById(id));
+        model.addAttribute("roles", roleService.getDemandedRoles());
         return "/update";
     }
 
     @PatchMapping("/save")
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam("id") int id) {
-        userService.update(id, user);
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam("id") int id,
+                             @RequestParam(value = "role") String role) {
+        userService.update(id, user, role);
         return "redirect:/admin";
     }
 

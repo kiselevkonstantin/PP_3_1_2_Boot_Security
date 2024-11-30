@@ -13,11 +13,21 @@
 
 
 </div>
-<a th:href="@{/admin/update(id=${user.id})}">Edit user</a>
 
 <br>
-<a th:href="@{/admin/delete(id=${user.id})}">Delete user</a>
+<form th:method="GET" th:action="@{/admin/update(id=${user.id})}">
+    <input type="hidden" name="id" th:value="${user.id}">
+    <button style="background: moccasin" type="submit" value="Edit">Изменить</button>
+</form>
+<br>
+<form th:method="DELETE" th:action="@{/admin/delete(id=${user.id})}">
+    <input type="hidden" name="id" th:value="${user.id}">
+    <button style="background: moccasin" type="submit" value="Delete">Удалить</button>
+</form>
+
 <br/>
 <a th:href="@{/logout}">Logout</a>
 </body>
 </html>
+
+

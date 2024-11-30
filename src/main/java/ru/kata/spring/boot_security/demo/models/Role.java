@@ -15,13 +15,13 @@ public class Role implements GrantedAuthority {
     private Long id;
 
     @Column(name = "name")
-    private String role;
+    private String name;
 
     public Role() {
     }
 
     public Role(String name) {
-        this.role = name;
+        this.name = name;
     }
 
     @ManyToMany
@@ -35,11 +35,11 @@ public class Role implements GrantedAuthority {
     }
 
     public String getRole() {
-        return role;
+        return name;
     }
 
     public void setRole(String name) {
-        this.role = name;
+        this.name = name;
     }
 
     @Override // interface GrantedAuthority
@@ -52,11 +52,11 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(role, role.role);
+        return Objects.equals(id, role.id) && Objects.equals(role, role.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, role);
+        return Objects.hash(id, name);
     }
 }

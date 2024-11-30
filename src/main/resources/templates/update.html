@@ -13,6 +13,14 @@
     <label for="email">E-mail:</label>
     <input type="text" th:field="*{email}" id="email"/>
     <br/>
+
+
+    <select name="role">
+        <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+        <option value="ROLE_USER">ROLE_USER</option>
+    </select>
+
+    <br/>
     <input type="submit" value="Update"/>
 </form>
 <br/>

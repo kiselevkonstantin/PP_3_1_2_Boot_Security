@@ -14,6 +14,7 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,6 +92,7 @@ public class AdminController {
                              @RequestParam(value = "role") String role) {
 
         userService.update(id, user, role);
+
         return "redirect:/admin";
     }
 

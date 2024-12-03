@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(long id, User updatedUser, String role) throws NullPointerException {
 
-
         User localUser = userRepository.getById(id);
+
         if (localUser != null) {
             localUser.setUsername(updatedUser.getUsername());
             localUser.setEmail(updatedUser.getEmail());
@@ -66,6 +66,7 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new NullPointerException("User doesn't exist");
         }
+
     }
 
     @Override

@@ -41,7 +41,7 @@ public class Init implements CommandLineRunner {
         roleService.save(adminRole);
         roleService.save(userRole);
 
-        User firstUser = new User("Alex", passwordEncoder.encode("123"), "kiselev@com", firstUserRole);
+        User firstUser = new User("Konstantin", passwordEncoder.encode("123"), "kiselev@com", firstUserRole);
         User secondUser = new User("Alex", passwordEncoder.encode("345"), "alex@com", secondUserRole);
 
         userService.saveUser(firstUser);

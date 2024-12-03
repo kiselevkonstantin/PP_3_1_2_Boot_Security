@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,16 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
     private UserService userService;
     private RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService, RoleRepository roleRepository) {
+    public AdminController(UserService userService, RoleService roleService, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -65,6 +68,7 @@ public class AdminController {
         }
 
         user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         return "redirect:/admin";
     }

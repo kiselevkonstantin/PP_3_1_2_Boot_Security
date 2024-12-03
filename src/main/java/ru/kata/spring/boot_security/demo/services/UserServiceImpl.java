@@ -54,22 +54,18 @@ public class UserServiceImpl implements UserService {
 
         User localUser = userRepository.getById(id);
 
-        if (localUser != null) {
-            localUser.setUsername(updatedUser.getUsername());
-            localUser.setEmail(updatedUser.getEmail());
-            localUser.setPassword(passwordEncoder.encode(localUser.getPassword()));
-            Role newRole = roleRepository.getRoleByName(role);
-
-            if (!localUser.getRoles().contains(newRole)) {
-                List<Role> newRoles = localUser.getRoles();
-                newRoles.add(newRole);
-                localUser.setRoles(newRoles);
-            }
-
-        } else {
-            throw new NullPointerException("User doesn't exist");
+        if (!localUser.getPassword().equals(updatedUser.getPassword())) {
+            localUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
+        localUser.setUsername(updatedUser.getUsername());
+        localUser.setEmail(updatedUser.getEmail());
+        Role newRole = roleRepository.getRoleByName(role);
 
+        if (!localUser.getRoles().contains(newRole)) {
+            List<Role> newRoles = localUser.getRoles();
+            newRoles.add(newRole);
+            localUser.setRoles(newRoles);
+        }
     }
 
     @Override

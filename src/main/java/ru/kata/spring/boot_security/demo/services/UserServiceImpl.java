@@ -17,14 +17,16 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private ApplicationContext context;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ApplicationContext context, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, ApplicationContext context, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.context = context;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -55,8 +57,9 @@ public class UserServiceImpl implements UserService {
         if (localUser != null) {
             localUser.setUsername(updatedUser.getUsername());
             localUser.setEmail(updatedUser.getEmail());
-
+            localUser.setPassword(passwordEncoder.encode(localUser.getPassword()));
             Role newRole = roleRepository.getRoleByName(role);
+
             if (!localUser.getRoles().contains(newRole)) {
                 List<Role> newRoles = localUser.getRoles();
                 newRoles.add(newRole);

@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    @Transactional // ВНИМАНИЕ! Если тут я делаю ошибку (ставлю аннотацию в ненужном месте), прошу пояснить
+    @Transactional (readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {

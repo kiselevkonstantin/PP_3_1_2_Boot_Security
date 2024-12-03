@@ -6,21 +6,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final RoleRepository roleRepository;
     private UserService userService;
     private RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleService = roleService;
+        this.roleRepository = roleRepository;
     }
 
 
@@ -33,7 +42,7 @@ public class AdminController {
 
     @GetMapping("/showUserByID")
     public String getUserByID(@RequestParam("id") long id, Model model) { // (value = "id", required = false, defaultValue = "0")
-        model.addAttribute("user", userService.getById(id));
+        model.addAttribute("user", userService.getUserById(id));
         return "showAdminUser";
     }
 
@@ -45,12 +54,19 @@ public class AdminController {
         return "new";
     }
 
-    @PostMapping("/addUser")
-    public String create(@ModelAttribute("user") User newUser) {
-        userService.saveUser(newUser);
+    @PostMapping(value = "/addUser")
+    public String createUser(@ModelAttribute("newUser") User user, HttpServletRequest request) {
+        List<Role> roles = new ArrayList<>();
+        String[] rolesId = request.getParameterValues("roles");
+
+        for (String roleId : rolesId) {
+            roles.add(roleService.getRoleById(Long.parseLong(roleId))); // Получаем объект Role по ID
+        }
+
+        user.setRoles(roles);
+        userService.saveUser(user);
         return "redirect:/admin";
     }
-
 
     @DeleteMapping("/delete")
     public String deleteUser(@RequestParam("id") long id) {
@@ -58,10 +74,14 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-
     @GetMapping("/update")
     public String editUser(@RequestParam("id") long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
+        User user = userService.getUserById(id);
+        if (user.getRoles() == null) {
+            user.setRoles(new ArrayList<>());
+            model.addAttribute("user", user);
+        }
+        model.addAttribute("user", userService.getUserById(id));
         model.addAttribute("roles", roleService.getDemandedRoles());
         return "/update";
     }
@@ -69,6 +89,7 @@ public class AdminController {
     @PatchMapping("/save")
     public String updateUser(@ModelAttribute("user") User user, @RequestParam("id") int id,
                              @RequestParam(value = "role") String role) {
+
         userService.update(id, user, role);
         return "redirect:/admin";
     }
@@ -83,4 +104,26 @@ public class AdminController {
         model.addAttribute("user", user);
         return "showAdminUser";
     }
+
+    @DeleteMapping(value = "/removeRole")
+    public String deleteUserRole(@RequestParam("userId") Long userId,
+                                 @RequestParam("roleId") Long roleId) {
+        List<Role> userRole = userService.getUserById(userId).getRoles();
+        userRole = userRole.stream().filter(role -> !role.getId().equals(roleId)).collect(Collectors.toList());
+        User user = userService.getUserById(userId);
+        user.setRoles(userRole);
+        userService.saveUser(user);
+        return "redirect:/admin";
+    }
+
+    @PatchMapping("/addRole")
+    public String addRole(@RequestParam("userId") Long userId, @RequestParam("roleId") String roleId) {
+        Role newRole = roleRepository.getRoleByName(roleId);
+
+        User user = userService.getUserById(userId);
+        userService.update(userId, user, newRole.getRole());
+
+        return "redirect:/admin";
+    }
+
 }

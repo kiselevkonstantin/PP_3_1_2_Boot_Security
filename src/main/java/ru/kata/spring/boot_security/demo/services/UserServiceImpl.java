@@ -10,7 +10,6 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -38,19 +37,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.getById(id);
     }
 
 
     @Override
     public void saveUser(User user) {
-        setEncryptedPassword(user);
         userRepository.save(user);
     }
 
     @Override
     public void update(long id, User updatedUser, String role) throws NullPointerException {
+
+
         User localUser = userRepository.getById(id);
         if (localUser != null) {
             localUser.setUsername(updatedUser.getUsername());
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
             Role newRole = roleRepository.getRoleByName(role);
             if (!localUser.getRoles().contains(newRole)) {
-                Collection<Role> newRoles = localUser.getRoles();
+                List<Role> newRoles = localUser.getRoles();
                 newRoles.add(newRole);
                 localUser.setRoles(newRoles);
             }

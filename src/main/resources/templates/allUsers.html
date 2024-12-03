@@ -17,15 +17,31 @@
     </tr>
     </thead>
     <tbody>
-
-    <tr th:each="user : ${users}">
-        <td th:text="${user.getId()}">ID</td>
-        <td th:text="${user.getUsername()}">Name</td>
-        <td th:text="${user.getEmail()}">e-mail</td>
+    <tr th:each="user :${users}">
+        <td>
+            <a th:href="@{/user}" th:text="${user.getId()}" target="_blank"></a>
+        </td>
+        <td th:text="${user.getUsername()}"></td>
+        <td th:text="${user.getEmail()}"></td>
         <td th:each="role:${user.roles}" th:text="${role.role}"/>
         <td>
+
+        <td>
+            <form th:method="GET" th:action="@{/admin/update(id=${user.id})}">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <button style="background: moccasin" type="submit" value="Edit">Изменить</button>
+            </form>
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{/admin/delete(id=${user.id})}">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <button style="background: moccasin" type="submit" value="Delete">Удалить пользователя</button>
+            </form>
+
+        </td>
     </tr>
     </tbody>
+
 </table>
 
 
@@ -36,3 +52,5 @@
 <a th:href="@{/logout}">Logout</a>
 </body>
 </html>
+
+
